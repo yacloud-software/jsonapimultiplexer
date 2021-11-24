@@ -12,7 +12,7 @@ require (
 	golang.conradwood.net/apis/jsonapimultiplexer v1.1.1435
 	golang.conradwood.net/apis/quota v1.1.1435
 	golang.conradwood.net/go-easyops v0.1.10341
-	golang.org/x/net v0.0.0-20211118161319-6a13c67c3ce4
+	golang.org/x/net v0.0.0-20211123203042-d83791d6bcd9
 	golang.yacloud.eu/apis/urlmapper v1.1.1435
 	google.golang.org/grpc v1.42.0
 	gopkg.in/yaml.v2 v2.4.0
@@ -35,7 +35,7 @@ require (
 	golang.conradwood.net/apis/objectstore v1.1.1435 // indirect
 	golang.conradwood.net/apis/registry v1.1.1435 // indirect
 	golang.conradwood.net/apis/rpcinterceptor v1.1.1435 // indirect
-	golang.org/x/sys v0.0.0-20211117180635-dee7805ff2e1 // indirect
+	golang.org/x/sys v0.0.0-20211124211545-fe61309f8881 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/genproto v0.0.0-20211118181313-81c1377c94b1 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
