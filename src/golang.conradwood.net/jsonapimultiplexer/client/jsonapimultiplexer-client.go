@@ -6,13 +6,13 @@ import (
 	"golang.conradwood.net/apis/common"
 	lb "golang.conradwood.net/apis/h2gproxy"
 	pb "golang.conradwood.net/apis/jsonapimultiplexer"
+	"golang.conradwood.net/go-easyops/authremote"
 	"golang.conradwood.net/go-easyops/client"
 	"golang.conradwood.net/go-easyops/tokens"
 	"golang.conradwood.net/go-easyops/utils"
 	//	rf "grpc/reflection/v1alpha"
+	"github.com/jhump/protoreflect/grpcreflect"
 	rf "google.golang.org/grpc/reflection/grpc_reflection_v1alpha"
-
-	"io"
 	"os"
 )
 
@@ -48,22 +48,14 @@ func doinspect() {
 	con := client.Connect(*inspect)
 	fmt.Printf("Connected to %s\n", *inspect)
 	c := rf.NewServerReflectionClient(con)
-	ctx := tokens.ContextWithToken()
-	stream, err := c.ServerReflectionInfo(ctx)
-	utils.Bail("Failed to query serverreflectioninfo", err)
-	fmt.Printf("Receiving from %v\n", stream)
-	for {
-		m, err := stream.Recv()
-		if err == io.EOF {
-			break
-		}
-		if err != nil {
-			fmt.Printf("stream.Recv failed with %v  %v\n", stream, err)
-			break
-		}
-
-		fmt.Printf("%v\n", m)
+	ctx := authremote.Context()
+	//	stream, err := c.ServerReflectionInfo(ctx)
+	//	utils.Bail("Failed to query serverreflectioninfo", err)
+	rc := grpcreflect.NewClient(ctx, c)
+	ls, err := rc.ListServices()
+	utils.Bail("failed to list", err)
+	for _, s := range ls {
+		fmt.Printf(" Service: %s\n", s)
 	}
 
-	fmt.Printf("%v\n", stream)
 }

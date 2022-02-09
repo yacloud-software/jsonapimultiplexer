@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	sh "golang.conradwood.net/apis/htmlserver"
 	lb "golang.conradwood.net/apis/h2gproxy"
+	sh "golang.conradwood.net/apis/htmlserver"
 	"golang.conradwood.net/go-easyops/client"
 	"golang.org/x/net/context"
 )

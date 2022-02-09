@@ -69,9 +69,9 @@ func (a *AutoRouter) Process(ctx context.Context, req *lb.ServeRequest) (*lb.Ser
 		if *debug {
 			fmt.Printf("[autorouter] no such method \"%s\" in %s\n", a.MethodName, a.Prefix)
 		}
-		hm := GetHTMLRouter()
-		return hm.Process(ctx, req)
-		//		return nil, fmt.Errorf("No method \"%s\" in service \"%s\"\n", a.MethodName, a.cfg.ServiceName)
+		//	hm := GetHTMLRouter()
+		//	return hm.Process(ctx, req)
+		return nil, fmt.Errorf("No method \"%s\" in service \"%s\"\n", a.MethodName, a.cfg.ServiceName)
 	}
 	if isInternal(m) {
 		return nil, fmt.Errorf("No method \"%s\" in service \"%s\"\n", a.MethodName, a.cfg.ServiceName)
@@ -96,13 +96,13 @@ func (a *AutoRouter) Process(ctx context.Context, req *lb.ServeRequest) (*lb.Ser
 
 // given a querystring of ?foo=bar we transfer the value bar into field foo
 func parseQueryParametersToProto(req *lb.ServeRequest, m *dynamic.Message) error {
-	// do clever stuff with req.Paramater and m.SetField(foo)
+	// do clever stuff with req.Parameter and m.SetField(foo)
 	for _, p := range req.Parameters {
 		f := lookupFieldByName(m, p.Name)
 		if f == nil {
 			// no such field. ignore or error?
 			if *debug {
-				fmt.Printf("[autorouter] No such field: %s (value=%s) in %s\n", p.Name, p.Value, m.XXX_MessageName())
+				fmt.Printf("[autorouter] No field with name \"%s\" (value=%s) in %s\n", p.Name, p.Value, m.XXX_MessageName())
 			}
 			continue
 		}

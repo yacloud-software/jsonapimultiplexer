@@ -8,6 +8,7 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	rf "google.golang.org/grpc/reflection/grpc_reflection_v1alpha"
+	//	_ "google.protobuf.descriptor"
 	"strings"
 	"time"
 )
@@ -151,9 +152,13 @@ func (t *RPCTarget) ProbeRPC(ctx context.Context) error {
 		return fmt.Errorf("Failed to query serverreflectioninfo: %s", err)
 	}
 	for _, svc := range ls {
+		if svc == "grpc.reflection.v1alpha.ServerReflection" {
+			// do not resolve reflection service itself
+			continue
+		}
 		sd, err := rc.ResolveService(svc)
 		if err != nil {
-			return fmt.Errorf("Failed to resolve service: %s", err)
+			return fmt.Errorf("Failed to resolve service (%s): %s", svc, err)
 		}
 		for _, method := range sd.GetMethods() {
 			t.methods = append(t.methods, method)
