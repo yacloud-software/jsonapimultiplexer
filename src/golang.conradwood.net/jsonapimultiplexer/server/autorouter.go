@@ -148,7 +148,11 @@ func (r *RPCTarget) call(ctx context.Context, method *desc.MethodDescriptor, req
 		um := jsonpb.Unmarshaler{AllowUnknownFields: false}
 		err = um.Unmarshal(strings.NewReader(input), msg)
 		if err != nil {
-			fmt.Printf("Input: %s\n", input)
+			s := input
+			if len(input) > 1024 {
+				s = input[:1024] + "..."
+			}
+			fmt.Printf("Input: %s\n", s)
 			return "", fmt.Errorf("Failed to parse json: %s", err)
 		}
 	}
