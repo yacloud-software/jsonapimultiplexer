@@ -1,9 +1,9 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
-	"golang.conradwood.net/go-easyops/prometheus"
 	"golang.conradwood.net/apis/common"
 	lb "golang.conradwood.net/apis/h2gproxy"
 	pb "golang.conradwood.net/apis/jsonapimultiplexer"
@@ -11,9 +11,9 @@ import (
 	"golang.conradwood.net/go-easyops/auth"
 	"golang.conradwood.net/go-easyops/client"
 	"golang.conradwood.net/go-easyops/errors"
+	"golang.conradwood.net/go-easyops/prometheus"
 	"golang.conradwood.net/go-easyops/server"
 	"golang.conradwood.net/go-easyops/utils"
-	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"os"
 )
@@ -92,28 +92,30 @@ func (e *echoServer) Rescan(ctx context.Context, req *common.Void) (*common.Void
 	return &common.Void{}, nil
 }
 
-// this is called by LBProxy
+// this is called by H2GProxy
 func (e *echoServer) Serve(ctx context.Context, req *lb.ServeRequest) (*lb.ServeResponse, error) {
 	return e.ServeHTML(ctx, req)
 }
 func (e *echoServer) ServeHTML(ctx context.Context, req *lb.ServeRequest) (*lb.ServeResponse, error) {
 	if *debug {
-		fmt.Printf("Request to serve %v\n", req)
+		fmt.Printf("Request to serve %s/%s\n", req.Host, req.Path)
 	}
 	if req.Method == "OPTIONS" {
 		resp := &lb.ServeResponse{Body: []byte("accepting all options")}
 		return resp, nil
 	}
 	resp := &lb.ServeResponse{Body: []byte("hi")}
-	are, err := autocfg.FindMatchByPathFromConfig(req.Path)
+	are, err := autocfg.FindMatchByPathFromMapper(ctx, req)
 	if err != nil {
-		fmt.Printf("Failed to find best match by path in autocfg.\n")
+		fmt.Printf("Failed to find best match by path in urlmapper.\n")
 		return nil, err
 	}
+
 	if are == nil {
-		are, err = autocfg.FindMatchByPathFromMapper(ctx, req)
+		//deprecated code path
+		are, err = autocfg.FindMatchByPathFromConfig(req.Path)
 		if err != nil {
-			fmt.Printf("Failed to find best match by path in urlmapper.\n")
+			fmt.Printf("Failed to find best match by path in autocfg.\n")
 			return nil, err
 		}
 	}
@@ -132,7 +134,7 @@ func (e *echoServer) ServeHTML(ctx context.Context, req *lb.ServeRequest) (*lb.S
 	}
 	sp, err := are.Process(ctx, req)
 	if *debug && err != nil {
-		fmt.Printf("Failed to process: %s\n", err)
+		fmt.Printf("Failed to process: %s\n", utils.ErrorString(err))
 	}
 	return sp, err
 
