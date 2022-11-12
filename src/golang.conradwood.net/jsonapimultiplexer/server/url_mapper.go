@@ -4,14 +4,22 @@ import (
 	"context"
 	"fmt"
 	lb "golang.conradwood.net/apis/h2gproxy"
+	"golang.conradwood.net/go-easyops/cache"
 	"golang.conradwood.net/go-easyops/utils"
 	um "golang.yacloud.eu/apis/urlmapper"
 	"strings"
+	"time"
 )
 
 var (
-	mapper um.URLMapperClient
+	um_cache = cache.New("jsonapi_urlmapper_cache", time.Duration(30)*time.Minute, 100)
+	mapper   um.URLMapperClient
 )
+
+type cache_entry struct {
+	res AutoRouterDef
+	err error
+}
 
 /*
  attempt to get an autorouterdef from local config file
@@ -19,9 +27,16 @@ var (
  invalid urls etc are not an error either
 */
 func (a *AutoConfigFile) FindMatchByPathFromMapper(ctx context.Context, req *lb.ServeRequest) (AutoRouterDef, error) {
+	key := fmt.Sprintf("%s_%s", req.Host, req.Path)
+	ao := um_cache.Get(key)
+	if ao != nil {
+		ax := ao.(*cache_entry)
+		return ax.res, ax.err
+	}
 	pathParts := strings.Split(req.Path, "/")
 	if len(pathParts) < 2 {
 		// too few parts in path, don't bother a lookup
+		um_cache.Put(key, &cache_entry{})
 		return nil, nil
 	}
 	if mapper == nil {
@@ -41,6 +56,7 @@ func (a *AutoConfigFile) FindMatchByPathFromMapper(ctx context.Context, req *lb.
 	idx := strings.LastIndex(req.Path, "/")
 	if idx == -1 {
 		// url has no '/'
+		um_cache.Put(key, &cache_entry{})
 		return nil, nil
 	}
 	apipath := req.Path[:idx]
@@ -50,11 +66,13 @@ func (a *AutoConfigFile) FindMatchByPathFromMapper(ctx context.Context, req *lb.
 		if *debug {
 			fmt.Printf("jsonmapping error: %s\n", utils.ErrorString(err))
 		}
+		um_cache.Put(key, &cache_entry{})
 		return nil, nil
 	}
 	mname := pathParts[len(pathParts)-1]
 	fmt.Printf("urlmapper match: %v\n", jmr)
 	are := &AutoRoutingEntry{ServiceName: jmr.GRPCService}
 	res := &AutoRouter{Mapping: jmr, Info: isinfo, cfg: are, MethodName: mname, Prefix: apipath, html: false}
+	um_cache.Put(key, &cache_entry{res: res})
 	return res, nil
 }
