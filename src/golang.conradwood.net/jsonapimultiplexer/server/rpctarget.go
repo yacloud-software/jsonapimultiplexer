@@ -73,7 +73,7 @@ func clearCache() {
 		t.con = nil
 		t.closed = true
 	}
-
+	um_cache.Clear() // clear urlmapper cache
 }
 
 // target, preferably cached, for a servicename
