@@ -28,6 +28,9 @@ type cache_entry struct {
 */
 func (a *AutoConfigFile) FindMatchByPathFromMapper(ctx context.Context, req *lb.ServeRequest) (AutoRouterDef, error) {
 	key := fmt.Sprintf("%s_%s", req.Host, req.Path)
+	if *debug {
+		fmt.Printf("cache key: \"%s\"\n", key)
+	}
 	ao := um_cache.Get(key)
 	if ao != nil {
 		ax := ao.(*cache_entry)
