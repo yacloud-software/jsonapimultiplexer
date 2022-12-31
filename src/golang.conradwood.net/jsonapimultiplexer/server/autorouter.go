@@ -17,7 +17,7 @@ import (
 	um "golang.yacloud.eu/apis/urlmapper"
 	//	pb "golang.conradwood.net/apis/jsonapimultiplexer"
 	lb "golang.conradwood.net/apis/h2gproxy"
-	"golang.conradwood.net/go-easyops/tokens"
+	"golang.conradwood.net/go-easyops/authremote"
 	"golang.conradwood.net/go-easyops/utils"
 	"golang.org/x/net/context"
 	"strings"
@@ -232,7 +232,7 @@ func reprobe() {
 			}
 			if time.Since(t.lastProbed).Seconds() > float64(*reprobe_delay) {
 				// creating token because this is called on server start up
-				t.ProbeRPC(tokens.ContextWithToken())
+				t.ProbeRPC(authremote.Context())
 			}
 		}
 	}

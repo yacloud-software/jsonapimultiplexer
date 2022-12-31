@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"golang.conradwood.net/apis/auth"
 	lb "golang.conradwood.net/apis/h2gproxy"
+	"golang.conradwood.net/go-easyops/authremote"
 	"golang.conradwood.net/go-easyops/server"
-	"golang.conradwood.net/go-easyops/tokens"
 	"golang.conradwood.net/go-easyops/utils"
 	//	"golang.org/x/net/context"
 	//	"google.golang.org/grpc"
@@ -71,7 +71,7 @@ func mainRequest(w http.ResponseWriter, r *http.Request) {
 	// end query parameters
 
 	// creating token because this is called during a http request (no context in http)
-	tctx := tokens.ContextWithToken()
+	tctx := authremote.Context()
 	md, _ := metadata.FromOutgoingContext(tctx)
 	tctx = metadata.NewIncomingContext(tctx, md)
 
