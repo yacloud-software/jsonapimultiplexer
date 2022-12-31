@@ -8,7 +8,6 @@ import (
 	pb "golang.conradwood.net/apis/jsonapimultiplexer"
 	"golang.conradwood.net/go-easyops/authremote"
 	"golang.conradwood.net/go-easyops/client"
-	"golang.conradwood.net/go-easyops/tokens"
 	"golang.conradwood.net/go-easyops/utils"
 	//	rf "grpc/reflection/v1alpha"
 	"github.com/jhump/protoreflect/grpcreflect"
@@ -28,7 +27,7 @@ func main() {
 		os.Exit(0)
 	}
 	if *rescan {
-		ctx := tokens.ContextWithToken()
+		ctx := authremote.Context()
 		_, err := pb.GetJSONApiMultiplexerClient().Rescan(ctx, &common.Void{})
 		utils.Bail("failed to rescan", err)
 		os.Exit(0)
@@ -36,7 +35,7 @@ func main() {
 	}
 	cl := pb.NewJSONApiMultiplexerClient(client.Connect("cnw/testing/cnw/latest"))
 	sr := &lb.ServeRequest{}
-	resp, err := cl.Serve(tokens.ContextWithToken(), sr)
+	resp, err := cl.Serve(authremote.Context(), sr)
 	if err != nil {
 		fmt.Printf("Failed: %s\n", err)
 		os.Exit(10)
