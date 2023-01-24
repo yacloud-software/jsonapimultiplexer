@@ -73,8 +73,8 @@ golang.conradwood.net/apis/deploymonkey v1.1.2124 h1:cp+3zIZOk9P0ObWret3IbEhOD+R
 golang.conradwood.net/apis/deploymonkey v1.1.2124/go.mod h1:M8RpCnenyinjf/+rm6zRUQ4WlW0Ehfl7nVe1/g1+BE8=
 golang.conradwood.net/apis/echoservice v1.1.2124 h1:g1bdCJQl+IhVi0Nie07WXi7LgPSlkat0dHFdA5d47W0=
 golang.conradwood.net/apis/echoservice v1.1.2124/go.mod h1:97SQAneyCG+BiO3yvIHkWP6VrA4JFGDmMIq/71MKQpc=
-golang.conradwood.net/apis/errorlogger v1.1.2124 h1:QpDHo/mmO8QD5U6FgdWskbkWLePUa2kmtVheO4ucEM0=
-golang.conradwood.net/apis/errorlogger v1.1.2124/go.mod h1:ZYRfyGGEY/sESyd1OSu/9cOQY9FUusT437Hatico91w=
+golang.conradwood.net/apis/errorlogger v1.1.2125 h1:De+F4/GVmr337kYkwyG3sHka8x/SDTiITh49QIsNl7Q=
+golang.conradwood.net/apis/errorlogger v1.1.2125/go.mod h1:BMcsc9Yr5Ib0Bwmah9SApGoEFVRSpCD1M1I7ptQoMyM=
 golang.conradwood.net/apis/framework v1.1.2124 h1:mfpkcU5OxPxze/pFlTgBMTpv9lFdjj1IKv90n/YB80k=
 golang.conradwood.net/apis/framework v1.1.2124/go.mod h1:TiycFK1My0XhOroSDzV5hpgAcKVwcmvasQfRo/aUMZA=
 golang.conradwood.net/apis/goeasyops v1.1.2124 h1:B4fHsIELtXeXI58RkHqSGP2yAWVXD0wegy1laukHDIs=
@@ -93,8 +93,8 @@ golang.conradwood.net/apis/registry v1.1.2124 h1:qpWRf4E3wS3Ha5yEoztm5wfiPVVPbxB
 golang.conradwood.net/apis/registry v1.1.2124/go.mod h1:KAEPM+DIj53NWPEjvC0q/t9Gq5WfYQe85zfm172s/w4=
 golang.conradwood.net/apis/rpcinterceptor v1.1.2124 h1:vjhRAaVbGPzj1hoNToS991Pd5coCFw+jVPvwJQz0b5A=
 golang.conradwood.net/apis/rpcinterceptor v1.1.2124/go.mod h1:Xlgg+YNVXbX+9GteS+SstMecJ5zf3J/PesexJPbMCM0=
-golang.conradwood.net/go-easyops v0.1.15691 h1:MOPbdllTY1A7XkIMAwWJqgtsMjPHCvilIKdNOTDyngs=
-golang.conradwood.net/go-easyops v0.1.15691/go.mod h1:tfUzNOsdMQv895pHandu7vlf5QCP28MApp6b9k4RhD8=
+golang.conradwood.net/go-easyops v0.1.15769 h1:znlLMqPUJqrOQZlexa5hYXhEvqX1K5eFmh21/X0Pzm4=
+golang.conradwood.net/go-easyops v0.1.15769/go.mod h1:iBkXAVr5MlActjkvvFN0ZRSgzpGqmeZjaJANdvb6SAY=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=
 golang.org/x/exp v0.0.0-20190121172915-509febef88a4/go.mod h1:CJ0aWSM057203Lf6IL+f9T1iT9GByDxfZKAQTCR3kQA=
