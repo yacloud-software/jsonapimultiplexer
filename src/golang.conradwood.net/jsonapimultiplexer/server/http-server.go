@@ -26,7 +26,7 @@ func startHTTP() {
 	fmt.Printf("Starting internal debug http server on port %d\n", *httpPort)
 	http.HandleFunc("/", mainRequest)
 	sd := server.NewHTMLServerDef("jsonapimultiplexer.htmlinterface")
-	sd.Port = *httpPort
+	sd.SetPort(*httpPort)
 	server.AddRegistry(sd)
 	err := http.ListenAndServe(fmt.Sprintf(":%d", *httpPort), nil)
 	utils.Bail("Failed to listen", err)

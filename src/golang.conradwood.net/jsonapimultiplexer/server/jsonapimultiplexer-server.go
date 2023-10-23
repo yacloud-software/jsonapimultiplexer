@@ -71,7 +71,7 @@ func main() {
 	go reprobe() // start the loop to refresh methods in exported services
 	srv = new(echoServer)
 	sd := server.NewServerDef()
-	sd.Port = *port
+	sd.SetPort(*port)
 	sd.Register = server.Register(
 		func(server *grpc.Server) error {
 			pb.RegisterJSONApiMultiplexerServer(server, srv)
