@@ -72,3 +72,4 @@ func (a *HTMLRouter) Process(ctx context.Context, req *lb.ServeRequest) (*lb.Ser
 	sp.MimeType = r.MimeType
 	return sp, nil
 }
+

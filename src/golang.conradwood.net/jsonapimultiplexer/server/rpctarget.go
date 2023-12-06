@@ -167,3 +167,4 @@ func (t *RPCTarget) ProbeRPC(ctx context.Context) error {
 	t.lastProbed = time.Now()
 	return nil
 }
+

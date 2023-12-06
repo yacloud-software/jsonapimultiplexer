@@ -135,3 +135,4 @@ func (r *AutoRoutingEntry) Path() string {
 func (r *AutoRoutingEntry) Name() string {
 	return r.ServiceName
 }
+

@@ -72,12 +72,12 @@ func main() {
 	srv = new(echoServer)
 	sd := server.NewServerDef()
 	sd.SetPort(*port)
-	sd.Register = server.Register(
+	sd.SetRegister(server.Register(
 		func(server *grpc.Server) error {
 			pb.RegisterJSONApiMultiplexerServer(server, srv)
 			return nil
 		},
-	)
+	))
 	go startHTTP()
 	err = server.ServerStartup(sd)
 	utils.Bail("Unable to start server", err)
@@ -196,3 +196,4 @@ func ContextUserInfo(ctx context.Context) string {
 	}
 	return fmt.Sprintf("CONTEXT - user=%s", userid)
 }
+
