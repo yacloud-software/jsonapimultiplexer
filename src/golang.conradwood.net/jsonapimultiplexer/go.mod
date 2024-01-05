@@ -11,7 +11,7 @@ require (
 	golang.conradwood.net/apis/htmlserver v1.1.2643
 	golang.conradwood.net/apis/jsonapimultiplexer v1.1.2643
 	golang.conradwood.net/apis/quota v1.1.2643
-	golang.conradwood.net/go-easyops v0.1.23582
+	golang.conradwood.net/go-easyops v0.1.23649
 	golang.org/x/net v0.19.0
 	golang.yacloud.eu/apis/urlmapper v1.1.2643
 	google.golang.org/grpc v1.60.0
