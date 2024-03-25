@@ -135,7 +135,7 @@ func lookupFieldByName(m *dynamic.Message, name string) *desc.FieldDescriptor {
 func (r *RPCTarget) call(ctx context.Context, method *desc.MethodDescriptor, req *lb.ServeRequest) (string, error) {
 	input := req.Body
 	if *debug {
-		fmt.Printf("Body: \"%s\"\n", string(input))
+		fmt.Printf("[rpctargetcall] Body: \"%s\"\n", string(input))
 	}
 	var err error
 	// create the proto
@@ -237,8 +237,3 @@ func reprobe() {
 		}
 	}
 }
-
-
-
-
-
