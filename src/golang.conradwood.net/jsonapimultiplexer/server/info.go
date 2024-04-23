@@ -64,7 +64,7 @@ func serveServiceInfoBrowser(ctx context.Context, req *lb.ServeRequest, a *AutoR
 		Request:    req,
 		RPCTarget:  t,
 		AutoRouter: a,
-		BaseURL:    "https://" + req.Host + "/" + filepath.Dir(req.Path),
+		BaseURL:    "https://" + strings.ReplaceAll(req.Host+"/"+filepath.Dir(req.Path), "//", "/"),
 	}
 	res := &lb.ServeResponse{MimeType: "text/html", HTTPResponseCode: 200, GRPCCode: 0}
 	tf, err := utils.ReadFile("templates/serviceinfo.html")
