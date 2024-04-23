@@ -9,6 +9,8 @@ import (
 	"github.com/jhump/protoreflect/dynamic"
 	lb "golang.conradwood.net/apis/h2gproxy"
 	"golang.conradwood.net/go-easyops/utils"
+	"golang.conradwood.net/jsonapimultiplexer/config"
+	"golang.yacloud.eu/apis/jsonapidoc"
 	"html/template"
 	"path/filepath"
 	"strings"
@@ -50,6 +52,14 @@ type ServiceInfoData struct {
 
 // service 'ServiceInfo' as html
 func serveServiceInfoBrowser(ctx context.Context, req *lb.ServeRequest, a *AutoRouter, t *RPCTarget) (*lb.ServeResponse, error) {
+	if config.UseJsonAPIDoc() {
+		jreq := &jsonapidoc.OverviewRenderRequest{
+			Mapping:     a.Mapping,
+			ServiceName: a.cfg.ServiceName,
+		}
+		res, err := jsonapidoc.GetJsonAPIDocClient().OverviewRenderHTML(ctx, jreq)
+		return res, err
+	}
 	sid := &ServiceInfoData{
 		Request:    req,
 		RPCTarget:  t,
@@ -74,7 +84,18 @@ func serveServiceInfoBrowser(ctx context.Context, req *lb.ServeRequest, a *AutoR
 	return res, nil
 }
 
-func serveInfoURL(m *desc.MethodDescriptor) (*lb.ServeResponse, error) {
+func serveInfoURL(ctx context.Context, a *AutoRouter, t *RPCTarget, m *desc.MethodDescriptor) (*lb.ServeResponse, error) {
+	if config.UseJsonAPIDoc() {
+		jreq := &jsonapidoc.InfoRenderRequest{
+			Mapping:      a.Mapping,
+			ServiceName:  a.cfg.ServiceName,
+			MethodName:   m.GetName(),
+			FQMethodName: m.GetFullyQualifiedName(),
+		}
+		res, err := jsonapidoc.GetJsonAPIDocClient().InfoRenderHTML(ctx, jreq)
+		return res, err
+	}
+
 	// info about an RPC
 	res := &lb.ServeResponse{HTTPResponseCode: 200, GRPCCode: 0}
 	fmt.Printf("[autorouter] M: %v\n", m)
@@ -112,8 +133,3 @@ func fill(m *dynamic.Message) {
 		fill(msg)
 	}
 }
-
-
-
-
-

@@ -79,7 +79,7 @@ func (a *AutoRouter) Process(ctx context.Context, req *lb.ServeRequest) (*lb.Ser
 
 	// if URL is '/info' -> serve the response/request syntax
 	if a.Info {
-		return serveInfoURL(m)
+		return serveInfoURL(ctx, a, t, m)
 	}
 
 	incPrefix(ctx, a.Prefix)
