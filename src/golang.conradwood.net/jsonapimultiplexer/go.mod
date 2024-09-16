@@ -7,13 +7,13 @@ toolchain go1.22.2
 require (
 	github.com/golang/protobuf v1.5.4
 	github.com/jhump/protoreflect v1.15.6
-	golang.conradwood.net/apis/auth v1.1.3064
-	golang.conradwood.net/apis/common v1.1.3064
+	golang.conradwood.net/apis/auth v1.1.3071
+	golang.conradwood.net/apis/common v1.1.3071
 	golang.conradwood.net/apis/h2gproxy v1.1.2910
 	golang.conradwood.net/apis/htmlserver v1.1.2791
 	golang.conradwood.net/apis/jsonapimultiplexer v1.1.2791
 	golang.conradwood.net/apis/quota v1.1.2791
-	golang.conradwood.net/go-easyops v0.1.29476
+	golang.conradwood.net/go-easyops v0.1.29674
 	golang.org/x/net v0.29.0
 	golang.yacloud.eu/apis/jsonapidoc v1.1.2910
 	golang.yacloud.eu/apis/urlmapper v1.1.2910
@@ -34,20 +34,20 @@ require (
 	github.com/prometheus/client_model v0.6.1 // indirect
 	github.com/prometheus/common v0.55.0 // indirect
 	github.com/prometheus/procfs v0.15.1 // indirect
-	golang.conradwood.net/apis/autodeployer v1.1.3057 // indirect
-	golang.conradwood.net/apis/deploymonkey v1.1.3057 // indirect
+	golang.conradwood.net/apis/autodeployer v1.1.3071 // indirect
+	golang.conradwood.net/apis/deploymonkey v1.1.3071 // indirect
 	golang.conradwood.net/apis/echoservice v1.1.3057 // indirect
 	golang.conradwood.net/apis/errorlogger v1.1.3057 // indirect
 	golang.conradwood.net/apis/framework v1.1.3057 // indirect
-	golang.conradwood.net/apis/goeasyops v1.1.3064 // indirect
-	golang.conradwood.net/apis/grafanadata v1.1.3057 // indirect
+	golang.conradwood.net/apis/goeasyops v1.1.3071 // indirect
+	golang.conradwood.net/apis/grafanadata v1.1.3071 // indirect
 	golang.conradwood.net/apis/objectstore v1.1.3057 // indirect
-	golang.conradwood.net/apis/registry v1.1.3057 // indirect
+	golang.conradwood.net/apis/registry v1.1.3071 // indirect
 	golang.org/x/sys v0.25.0 // indirect
 	golang.org/x/text v0.18.0 // indirect
 	golang.yacloud.eu/apis/autodeployer2 v1.1.3057 // indirect
-	golang.yacloud.eu/apis/fscache v1.1.3057 // indirect
-	golang.yacloud.eu/apis/session v1.1.3064 // indirect
+	golang.yacloud.eu/apis/fscache v1.1.3071 // indirect
+	golang.yacloud.eu/apis/session v1.1.3071 // indirect
 	golang.yacloud.eu/apis/unixipc v1.1.3057 // indirect
 	golang.yacloud.eu/apis/urlcacher v1.1.3057 // indirect
 	golang.yacloud.eu/unixipc v0.1.26852 // indirect
