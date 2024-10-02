@@ -13,7 +13,7 @@ require (
 	golang.conradwood.net/apis/htmlserver v1.1.3232
 	golang.conradwood.net/apis/jsonapimultiplexer v1.1.3232
 	golang.conradwood.net/apis/quota v1.1.3232
-	golang.conradwood.net/go-easyops v0.1.30731
+	golang.conradwood.net/go-easyops v0.1.30764
 	golang.org/x/net v0.29.0
 	golang.yacloud.eu/apis/jsonapidoc v1.1.3232
 	golang.yacloud.eu/apis/urlmapper v1.1.3232
