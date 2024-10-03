@@ -50,16 +50,18 @@ func (a *AutoRouter) Router() route {
 func (a *AutoRouter) Process(ctx context.Context, req *lb.ServeRequest) (*lb.ServeResponse, error) {
 	verbose := *debug
 	u := auth.GetUser(ctx)
+	info := "[autorouter] "
 	if u != nil {
+		info = fmt.Sprintf("[autorouter user %s %s", u.ID, u.Email)
 		verbose = true
 	}
 	if verbose {
-		fmt.Printf("[autorouter] Processing service: %s, method \"%s\"\n", a.cfg.ServiceName, a.MethodName)
+		fmt.Printf(info+"Processing service: %s, method \"%s\"\n", a.cfg.ServiceName, a.MethodName)
 	}
 
 	t := getRPCTarget(ctx, a.cfg.ServiceName)
 	if t == nil {
-		fmt.Printf("[autorouter] No target for %s\n", a.cfg.ServiceName)
+		fmt.Printf(info+"No target for %s\n", a.cfg.ServiceName)
 		return nil, fmt.Errorf("failed to call %s/%s:, no target\n", a.cfg.ServiceName, a.MethodName)
 	}
 	res := &lb.ServeResponse{MimeType: "application/json", HTTPResponseCode: 200, GRPCCode: 0}
@@ -73,7 +75,7 @@ func (a *AutoRouter) Process(ctx context.Context, req *lb.ServeRequest) (*lb.Ser
 	m := t.GetMethod(a.MethodName)
 	if m == nil {
 		if verbose {
-			fmt.Printf("[autorouter] no such method \"%s\" in %s\n", a.MethodName, a.Prefix)
+			fmt.Printf(info+"no such method \"%s\" in %s\n", a.MethodName, a.Prefix)
 		}
 		//	hm := GetHTMLRouter()
 		//	return hm.Process(ctx, req)
@@ -95,12 +97,12 @@ func (a *AutoRouter) Process(ctx context.Context, req *lb.ServeRequest) (*lb.Ser
 	// convert json into protobufs, make the RPC call and return the proto (as json)
 	ax, err := t.call(ctx, m, req)
 	if err != nil {
-		fmt.Printf("[autorouter] Failure calling %s.%s: %s\n", a.cfg.ServiceName, a.MethodName, utils.ErrorString(err))
+		fmt.Printf(info+"Failure calling %s.%s: %s\n", a.cfg.ServiceName, a.MethodName, utils.ErrorString(err))
 		return nil, err
 	}
 	res.Body = []byte(ax)
 	if verbose {
-		fmt.Printf("[autorouter] Successfully called %s.%s\n", a.cfg.ServiceName, a.MethodName)
+		fmt.Printf(info+"Successfully called %s.%s\n", a.cfg.ServiceName, a.MethodName)
 	}
 
 	return res, nil
