@@ -1,7 +1,7 @@
 package main
 
 // this is the "autoconfig" for services that may be automatically exposed
-// the new and preferred style for services with RPCInterceptor
+// the new and preferred style for services
 
 // we have a basic enquiry mechanism:
 // /foo/[service]/ServiceInfo -> return list of methods
@@ -17,6 +17,7 @@ import (
 	um "golang.yacloud.eu/apis/urlmapper"
 	//	pb "golang.conradwood.net/apis/jsonapimultiplexer"
 	lb "golang.conradwood.net/apis/h2gproxy"
+	"golang.conradwood.net/go-easyops/auth"
 	"golang.conradwood.net/go-easyops/authremote"
 	"golang.conradwood.net/go-easyops/utils"
 	"golang.org/x/net/context"
@@ -47,7 +48,12 @@ func (a *AutoRouter) Router() route {
 
 // main processing function -> h2gproxy gives us a serverequest and we return a serveresponse to lbproxy
 func (a *AutoRouter) Process(ctx context.Context, req *lb.ServeRequest) (*lb.ServeResponse, error) {
-	if *debug {
+	verbose := *debug
+	u := auth.GetUser(ctx)
+	if u != nil {
+		verbose = true
+	}
+	if verbose {
 		fmt.Printf("[autorouter] Processing service: %s, method \"%s\"\n", a.cfg.ServiceName, a.MethodName)
 	}
 
@@ -66,7 +72,7 @@ func (a *AutoRouter) Process(ctx context.Context, req *lb.ServeRequest) (*lb.Ser
 	}
 	m := t.GetMethod(a.MethodName)
 	if m == nil {
-		if *debug {
+		if verbose {
 			fmt.Printf("[autorouter] no such method \"%s\" in %s\n", a.MethodName, a.Prefix)
 		}
 		//	hm := GetHTMLRouter()
@@ -79,6 +85,9 @@ func (a *AutoRouter) Process(ctx context.Context, req *lb.ServeRequest) (*lb.Ser
 
 	// if URL is '/info' -> serve the response/request syntax
 	if a.Info {
+		if verbose {
+			fmt.Printf("serving info url\n")
+		}
 		return serveInfoURL(ctx, a, t, m)
 	}
 
@@ -90,6 +99,9 @@ func (a *AutoRouter) Process(ctx context.Context, req *lb.ServeRequest) (*lb.Ser
 		return nil, err
 	}
 	res.Body = []byte(ax)
+	if verbose {
+		fmt.Printf("[autorouter] Successfully called %s.%s\n", a.cfg.ServiceName, a.MethodName)
+	}
 
 	return res, nil
 }
