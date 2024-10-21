@@ -52,7 +52,7 @@ func (a *AutoRouter) Process(ctx context.Context, req *lb.ServeRequest) (*lb.Ser
 	u := auth.GetUser(ctx)
 	info := "[autorouter] "
 	if u != nil {
-		info = fmt.Sprintf("[autorouter user %s %s", u.ID, u.Email)
+		info = fmt.Sprintf("[autorouter user %s %s] ", u.ID, u.Email)
 		verbose = true
 	}
 	if verbose {
