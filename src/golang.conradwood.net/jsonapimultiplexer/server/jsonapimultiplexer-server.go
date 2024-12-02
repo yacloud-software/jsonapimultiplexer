@@ -23,7 +23,7 @@ var (
 	httpPort = flag.Int("http_port", 0, "set to non-0 to enable the debug http server port (jsonapi serving)")
 
 	debug            = flag.Bool("debug", false, "debug mode enable")
-	enablequota      = flag.Bool("enable_quota", true, "enable quotas for services")
+	enablequota      = flag.Bool("enable_quota", false, "enable quotas for services")
 	autoconfigfile   = flag.String("autofile", "configs/autorouting.yaml", "filename of a yaml file defining services with automatic routing")
 	srv              *echoServer
 	qc               quota.QuotaServiceClient
@@ -151,6 +151,9 @@ func singleHeader(req *lb.ServeRequest, name string) string {
 
 // return true if we're allowed to continue
 func withinQuota(ctx context.Context, re route) bool {
+	if !*enablequota {
+		return true
+	}
 	if qc == nil {
 		qc = quota.NewQuotaServiceClient(client.Connect("quota.QuotaService"))
 	}
@@ -196,8 +199,3 @@ func ContextUserInfo(ctx context.Context) string {
 	}
 	return fmt.Sprintf("CONTEXT - user=%s", userid)
 }
-
-
-
-
-
