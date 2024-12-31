@@ -1,6 +1,6 @@
 module golang.conradwood.net/jsonapimultiplexer
 
-go 1.22.7
+go 1.22
 
 toolchain go1.23.3
 
@@ -13,7 +13,7 @@ require (
 	golang.conradwood.net/apis/htmlserver v1.1.3232
 	golang.conradwood.net/apis/jsonapimultiplexer v1.1.3232
 	golang.conradwood.net/apis/quota v1.1.3232
-	golang.conradwood.net/go-easyops v0.1.32310
+	golang.conradwood.net/go-easyops v0.1.32768
 	golang.org/x/net v0.32.0
 	golang.yacloud.eu/apis/jsonapidoc v1.1.3232
 	golang.yacloud.eu/apis/urlmapper v1.1.3232
