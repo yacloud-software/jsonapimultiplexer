@@ -9,7 +9,6 @@ import (
 
 	lb "golang.conradwood.net/apis/h2gproxy"
 	"golang.conradwood.net/go-easyops/cache"
-	"golang.conradwood.net/go-easyops/errors"
 	"golang.conradwood.net/go-easyops/utils"
 	"golang.yacloud.eu/apis/urlmapper"
 	um "golang.yacloud.eu/apis/urlmapper"
@@ -38,13 +37,14 @@ func (a *AutoConfigFile) FindMatchByPathFromMapper(ctx context.Context, req *lb.
 	return urlmapper_oldstyle(ctx, req)
 }
 func urlmapper_newstyle(ctx context.Context, req *lb.ServeRequest) (AutoRouterDef, error) {
-	m, err := urlmapper.GetURLMapperClient().GetMapping(ctx, &urlmapper.MappingRequest{Path: "https://" + req.Host + req.Path})
+	mr := &urlmapper.MappingRequest{Path: "https://" + req.Host + req.Path}
+	m, err := urlmapper.GetURLMapperClient().GetMapping(ctx, mr)
 	if err != nil {
 		return nil, err
 	}
 	if !m.MappingFound {
-		fmt.Printf("No endpoint for path \"%s\"\n", req.Path)
-		return nil, errors.NotFound(ctx, "endpoint not found")
+		fmt.Printf("No urlmapper endpoint for path \"%s\"\n", mr.Path)
+		return nil, nil
 	}
 	isinfo := false
 	fmt.Printf("urlmapper match: %v\n", m)
