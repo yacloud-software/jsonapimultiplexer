@@ -19,7 +19,7 @@ import (
 )
 
 var (
-	config_file_enabled = flag.Bool("use_config_file", true, "if true, use the old style config files, otherwise ignore entries in that file")
+	config_file_enabled = flag.Bool("use_config_file", false, "if true, use the old style config files, otherwise ignore entries in that file")
 	autodebug           = flag.Bool("debug_auto", false, "debug autoconfig stuff")
 )
 
