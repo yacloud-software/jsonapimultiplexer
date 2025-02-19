@@ -6,17 +6,21 @@ package main
 import (
 	"flag"
 	"fmt"
+
 	//	pb "golang.conradwood.net/apis/jsonapimultiplexer"
 	lb "golang.conradwood.net/apis/h2gproxy"
 	"golang.org/x/net/context"
 	"gopkg.in/yaml.v2"
+
 	//	"io/ioutil"
-	"golang.conradwood.net/go-easyops/utils"
 	"strings"
+
+	"golang.conradwood.net/go-easyops/utils"
 )
 
 var (
-	autodebug = flag.Bool("debug_auto", false, "debug autoconfig stuff")
+	config_file_enabled = flag.Bool("use_config_file", true, "if true, use the old style config files, otherwise ignore entries in that file")
+	autodebug           = flag.Bool("debug_auto", false, "debug autoconfig stuff")
 )
 
 type AutoRouterDef interface {
@@ -53,6 +57,9 @@ func ReadAutoRouting(fname string) (*AutoConfigFile, error) {
 }
 
 func (a *AutoConfigFile) ByServicePrefix(prefix string) *AutoRoutingEntry {
+	if !*config_file_enabled {
+		return nil
+	}
 	for _, c := range a.Routes {
 		if c.ServicePrefix == prefix {
 			return c
@@ -65,11 +72,14 @@ func (a *AutoConfigFile) ByServicePrefix(prefix string) *AutoRoutingEntry {
 }
 
 /*
- attempt to get an autorouterdef from local config file
- not having a match is not an error.
- invalid urls etc are not an error either
+attempt to get an autorouterdef from local config file
+not having a match is not an error.
+invalid urls etc are not an error either
 */
 func (a *AutoConfigFile) FindMatchByPathFromConfig(path string) (AutoRouterDef, error) {
+	if !*config_file_enabled {
+		return nil, nil
+	}
 	deb := "[autoconfig] "
 	if *autodebug {
 		fmt.Printf("%sFinding auto-config match for path \"%s\"...\n", deb, path)
@@ -135,8 +145,3 @@ func (r *AutoRoutingEntry) Path() string {
 func (r *AutoRoutingEntry) Name() string {
 	return r.ServiceName
 }
-
-
-
-
-
