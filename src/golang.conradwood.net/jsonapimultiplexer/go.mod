@@ -1,6 +1,8 @@
 module golang.conradwood.net/jsonapimultiplexer
 
-go 1.22.2
+go 1.22
+
+toolchain go1.23.3
 
 require (
 	github.com/golang/protobuf v1.5.4
