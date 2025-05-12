@@ -31,8 +31,8 @@ import (
 
 var (
 	tlock         sync.Mutex
-	reprobe_delay = flag.Int("reprobe_delay", 300, "delay in `seconds` between reprobes for API changes")
-	idle_timeout  = flag.Int("idle_timeout", 600, "idle timeout in `seconds` after which to stop probing a service and removing it from cache")
+	reprobe_delay = flag.Duration("reprobe_delay", time.Duration(3)*time.Hour, "delay between reprobes for API changes")
+	idle_timeout  = flag.Duration("idle_timeout", time.Duration(7)*time.Hour, "idle timeout in after which to stop probing a service and removing it from cache")
 )
 
 type AutoRouter struct {
@@ -228,10 +228,10 @@ func reprobe() {
 			if *idle_timeout < *reprobe_delay {
 				n = *idle_timeout
 			}
-			if n < 60 {
-				time.Sleep(time.Duration(n) * time.Second)
+			if n.Seconds() < 60.0 {
+				time.Sleep(n)
 			} else {
-				utils.RandomStall(n)
+				utils.RandomStall(int(n.Seconds()))
 			}
 		}
 		if *debug {
@@ -239,7 +239,7 @@ func reprobe() {
 		}
 		wait = true
 		for _, t := range rpctargets {
-			if time.Since(t.lastUsed).Seconds() > float64(*idle_timeout) {
+			if time.Since(t.lastUsed) > *idle_timeout {
 				if *debug {
 					fmt.Printf("[autorouter] Removing %v, it's idle\n", t)
 				}
@@ -247,7 +247,7 @@ func reprobe() {
 				wait = false
 				break
 			}
-			if time.Since(t.lastProbed).Seconds() > float64(*reprobe_delay) {
+			if time.Since(t.lastProbed) > *reprobe_delay {
 				// creating token because this is called on server start up
 				t.ProbeRPC(authremote.Context())
 			}
