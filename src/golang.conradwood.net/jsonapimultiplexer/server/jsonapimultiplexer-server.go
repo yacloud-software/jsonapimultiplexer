@@ -63,6 +63,7 @@ type route interface {
 func main() {
 	var err error
 	flag.Parse()
+   server.SetHealth(common.Health_STARTING)
 
 	prometheus.MustRegister(forwardedCounter, failedForwardedCounter, prefixCounter)
 	utils.Bail("failed to read configfile", err)
@@ -72,6 +73,7 @@ func main() {
 	srv = new(echoServer)
 	sd := server.NewServerDef()
 	sd.SetPort(*port)
+sd.SetOnStartupCallback(startup)
 	sd.SetRegister(server.Register(
 		func(server *grpc.Server) error {
 			pb.RegisterJSONApiMultiplexerServer(server, srv)
@@ -82,6 +84,9 @@ func main() {
 	err = server.ServerStartup(sd)
 	utils.Bail("Unable to start server", err)
 	os.Exit(0)
+}
+func startup() {
+	server.SetHealth(common.Health_READY)
 }
 
 /************************************
@@ -199,3 +204,6 @@ func ContextUserInfo(ctx context.Context) string {
 	}
 	return fmt.Sprintf("CONTEXT - user=%s", userid)
 }
+
+
+
