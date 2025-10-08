@@ -14,6 +14,7 @@ import (
 	"github.com/golang/protobuf/jsonpb"
 	"github.com/jhump/protoreflect/desc"
 	"github.com/jhump/protoreflect/dynamic"
+	"golang.conradwood.net/go-easyops/errors"
 	"golang.conradwood.net/go-easyops/prometheus"
 	um "golang.yacloud.eu/apis/urlmapper"
 
@@ -22,11 +23,12 @@ import (
 	"sync"
 	"time"
 
+	"context"
+
 	lb "golang.conradwood.net/apis/h2gproxy"
 	"golang.conradwood.net/go-easyops/auth"
 	"golang.conradwood.net/go-easyops/authremote"
 	"golang.conradwood.net/go-easyops/utils"
-	"golang.org/x/net/context"
 )
 
 var (
@@ -65,7 +67,7 @@ func (a *AutoRouter) Process(ctx context.Context, req *lb.ServeRequest) (*lb.Ser
 	t := getRPCTarget(ctx, a.cfg.ServiceName)
 	if t == nil {
 		fmt.Printf(info+"No target for %s\n", a.cfg.ServiceName)
-		return nil, fmt.Errorf("failed to call %s/%s:, no target\n", a.cfg.ServiceName, a.MethodName)
+		return nil, errors.Errorf("failed to call %s/%s:, no target\n", a.cfg.ServiceName, a.MethodName)
 	}
 	res := &lb.ServeResponse{MimeType: "application/json", HTTPResponseCode: 200, GRPCCode: 0}
 	if a.html {
@@ -82,10 +84,10 @@ func (a *AutoRouter) Process(ctx context.Context, req *lb.ServeRequest) (*lb.Ser
 		}
 		//	hm := GetHTMLRouter()
 		//	return hm.Process(ctx, req)
-		return nil, fmt.Errorf("No method \"%s\" in service \"%s\"\n", a.MethodName, a.cfg.ServiceName)
+		return nil, errors.Errorf("No method \"%s\" in service \"%s\"\n", a.MethodName, a.cfg.ServiceName)
 	}
 	if isInternal(m) {
-		return nil, fmt.Errorf("No method \"%s\" in service \"%s\"\n", a.MethodName, a.cfg.ServiceName)
+		return nil, errors.Errorf("No method \"%s\" in service \"%s\"\n", a.MethodName, a.cfg.ServiceName)
 	}
 
 	// if URL is '/info' -> serve the response/request syntax
@@ -170,12 +172,12 @@ func (r *RPCTarget) call(ctx context.Context, method *desc.MethodDescriptor, req
 				s = input[:1024] + "..."
 			}
 			fmt.Printf("Input: %s\n", s)
-			return "", fmt.Errorf("Failed to parse json: %s", err)
+			return "", errors.Errorf("Failed to parse json: %s", err)
 		}
 	}
 	err = parseQueryParametersToProto(req, msg)
 	if err != nil {
-		return "", fmt.Errorf("Failed to parse parameters: %s", err)
+		return "", errors.Errorf("Failed to parse parameters: %s", err)
 	}
 
 	if *debug {

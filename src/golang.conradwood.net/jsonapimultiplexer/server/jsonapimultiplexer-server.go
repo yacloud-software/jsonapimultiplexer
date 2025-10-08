@@ -4,6 +4,8 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"os"
+
 	"golang.conradwood.net/apis/common"
 	lb "golang.conradwood.net/apis/h2gproxy"
 	pb "golang.conradwood.net/apis/jsonapimultiplexer"
@@ -15,7 +17,6 @@ import (
 	"golang.conradwood.net/go-easyops/server"
 	"golang.conradwood.net/go-easyops/utils"
 	"google.golang.org/grpc"
-	"os"
 )
 
 var (
@@ -63,7 +64,7 @@ type route interface {
 func main() {
 	var err error
 	flag.Parse()
-   server.SetHealth(common.Health_STARTING)
+	server.SetHealth(common.Health_STARTING)
 
 	prometheus.MustRegister(forwardedCounter, failedForwardedCounter, prefixCounter)
 	utils.Bail("failed to read configfile", err)
@@ -73,7 +74,7 @@ func main() {
 	srv = new(echoServer)
 	sd := server.NewServerDef()
 	sd.SetPort(*port)
-sd.SetOnStartupCallback(startup)
+	sd.SetOnStartupCallback(startup)
 	sd.SetRegister(server.Register(
 		func(server *grpc.Server) error {
 			pb.RegisterJSONApiMultiplexerServer(server, srv)
@@ -115,16 +116,16 @@ func (e *echoServer) ServeHTML(ctx context.Context, req *lb.ServeRequest) (*lb.S
 		fmt.Printf("Failed to find best match by path in urlmapper.\n")
 		return nil, err
 	}
-
-	if are == nil {
-		//deprecated code path
-		are, err = autocfg.FindMatchByPathFromConfig(req.Path)
-		if err != nil {
-			fmt.Printf("Failed to find best match by path in autocfg.\n")
-			return nil, err
+	/*
+		if are == nil {
+			//deprecated code path
+			are, err = autocfg.FindMatchByPathFromConfig(req.Path)
+			if err != nil {
+				fmt.Printf("Failed to find best match by path in autocfg.\n")
+				return nil, err
+			}
 		}
-	}
-
+	*/
 	if are == nil {
 		return nil, errors.InvalidArgs(ctx, "no such endpoint", "endpoint not found: (path=%s)", req.Path)
 	}
@@ -204,6 +205,3 @@ func ContextUserInfo(ctx context.Context) string {
 	}
 	return fmt.Sprintf("CONTEXT - user=%s", userid)
 }
-
-
-

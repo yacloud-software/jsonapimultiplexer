@@ -1,11 +1,12 @@
 package main
 
 import (
-	"fmt"
+	"strconv"
+
 	dpb "github.com/golang/protobuf/protoc-gen-go/descriptor"
 	"github.com/jhump/protoreflect/desc"
 	"github.com/jhump/protoreflect/dynamic"
-	"strconv"
+	"golang.conradwood.net/go-easyops/errors"
 )
 
 // take an input string and try to convert it to the format we need it in
@@ -36,19 +37,14 @@ func setField(m *dynamic.Message, fd *desc.FieldDescriptor, value string) error 
 	case dpb.FieldDescriptorProto_TYPE_ENUM:
 		return m.TrySetField(fd, value)
 	default:
-		return fmt.Errorf("Unable to set field %s (type %s) in %s to %s (Unsupported conversion)", fd.GetName(), fd.GetType(), m.XXX_MessageName(), value)
+		return errors.Errorf("Unable to set field %s (type %s) in %s to %s (Unsupported conversion)", fd.GetName(), fd.GetType(), m.XXX_MessageName(), value)
 	}
 }
 
 // generate the helpful and consistent error message
 func setFieldWithError(err error, m *dynamic.Message, fd *desc.FieldDescriptor, value interface{}, vs string) error {
 	if err != nil {
-		return fmt.Errorf("Field %s is of type %s. Your value \"%s\" does not convert to that format (%s)", fd.GetName(), fd.GetType(), vs, err)
+		return errors.Errorf("Field %s is of type %s. Your value \"%s\" does not convert to that format (%s)", fd.GetName(), fd.GetType(), vs, err)
 	}
 	return m.TrySetField(fd, value)
 }
-
-
-
-
-
